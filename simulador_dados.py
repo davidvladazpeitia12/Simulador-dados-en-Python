@@ -18,16 +18,31 @@ D10 = 10
 D12 = 12
 D20 = 20
 
+total_lanzamientos = 0
+total_dados = 0
+suma_historica = 0
 # Bucle principal del programa
 while True:
     print("Lanzador de ddados")
     print("1. Lanzar dados")
-    print("2. Salir")
+    print("2. Estadisticas")
+    print("3. Salir")
+
 
     opcion = input("Elige una opción (1-3): ")
+    if opcion == "3":
+            print("hasta pronto")
+            break
 
-    if opcion == "2":
-        print(" Hasta pronto.")
+
+    elif opcion == "2":
+        if total_lanzamientos == 0:
+            console.print("[yellow]Aún no hay estadísticas.[/yellow]")
+        else:
+            promedio_hist = suma_historica / total_dados
+            stats = f"Tiradas: {total_lanzamientos}\nDados: {total_dados}\nSuma: {suma_historica}\nPromedio: {promedio_hist:.2f}"
+            console.print(Panel(stats, title="[yellow]Estadísticas[/yellow]", expand=False))
+       
         break
     elif opcion == "1":
         caras = 0
@@ -65,7 +80,7 @@ while True:
                 texto_anim = ""
                 for i in range(cantidad):
                     texto_anim += str(random.randint(1, caras)) + "   "
-                live.update(Panel(f"¡Lanzando!\n\n{texto_anim}", title="Rodando", expand=False))
+                live.update(Panel(f"Lanzando dados\n\n{texto_anim}", title="Lanzazdor", expand=False))
                 time.sleep(0.1)
 
         texto_resultado = ""
@@ -86,6 +101,9 @@ while True:
         promedio = total_tirada / cantidad
         resumen = f"{texto_resultado}\n\nTotal: {total_tirada}\nPromedio: {promedio:.2f}"
         console.print(Panel(resumen, title="Resultado Final", expand=False))
+        total_lanzamientos += 1
+        total_dados += cantidad
+        suma_historica += total_tirada
     else:
         print("Opción no válida.")
         
