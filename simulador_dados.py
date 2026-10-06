@@ -10,7 +10,7 @@ from rich.live import Live
 
 console = Console()
 
-# Constantes para los tipos de dados
+# Constantes para definir el número de caras de los tipos de dados permitidos
 D4 = 4
 D6 = 6
 D8 = 8
@@ -18,23 +18,26 @@ D10 = 10
 D12 = 12
 D20 = 20
 
+# Variables globales para acumular los datos de las estadísticas históricas
 total_lanzamientos = 0
 total_dados = 0
 suma_historica = 0
-# Bucle principal del programa
+
+# Bucle principal del programa, el menu
 while True:
     print("Lanzador de ddados")
     print("1. Lanzar dados")
     print("2. Estadisticas")
     print("3. Salir")
 
-
     opcion = input("Elige una opción (1-3): ")
+    
+    # Opción 3: Salida del programa
     if opcion == "3":
             print("hasta pronto")
             break
 
-
+    # Opción 2: Mostrar panel de estadísticas acumuladas
     elif opcion == "2":
         if total_lanzamientos == 0:
             console.print("[yellow]Aún no hay estadísticas.[/yellow]")
@@ -42,13 +45,17 @@ while True:
             promedio_hist = suma_historica / total_dados
             stats = f"Tiradas: {total_lanzamientos}\nDados: {total_dados}\nSuma: {suma_historica}\nPromedio: {promedio_hist:.2f}"
             console.print(Panel(stats, title="[yellow]Estadísticas[/yellow]", expand=False))
-       
+        
         break
+        
+    # Opción 1: Proceso principal de lanzamiento de dados
     elif opcion == "1":
         caras = 0
+        # Validación del tipo de dado asegurando que se introduce una opción válida
         while caras == 0:
             try:
                 tipo = int(input("Elige el tipo de dado (4, 6, 8, 10, 12, 20): "))
+                # Asignación del número de caras usando las constantes definidas
                 if tipo == D4:
                     caras = D4
                 elif tipo == D6:
@@ -67,6 +74,7 @@ while True:
                 print("Error: Debes introducir un número entero")
 
         cantidad = 0
+        # Validación para asegurar que la cantidad de dados sea un entero positivo
         while cantidad <= 0:
             try:
                 cantidad = int(input("¿Cuántos dados quieres lanzar?: "))
@@ -75,6 +83,7 @@ while True:
             except ValueError:
                 print("Error: Debes introducir un número entero.")
 
+        # Bloque de animación
         with Live(refresh_per_second=15) as live:
             for frame in range(12):
                 texto_anim = ""
@@ -83,12 +92,14 @@ while True:
                 live.update(Panel(f"Lanzando dados\n\n{texto_anim}", title="Lanzazdor", expand=False))
                 time.sleep(0.1)
 
+        # Implmentaciob de los resultados definitivos y asignación de colores
         texto_resultado = ""
         total_tirada = 0
         for i in range(cantidad):
             valor_final = random.randint(1, caras)
             total_tirada += valor_final
 
+            # Lógica para colorear verde (máximo), rojo (1) o amarillo (resto)
             if valor_final == 1:
                 color = "red"
             elif valor_final == caras:
@@ -98,12 +109,16 @@ while True:
 
             texto_resultado += f"[{color}][ {valor_final} ][/{color}]   "
 
+        # Cálculo del promedio y creación del panel final con los resultados
         promedio = total_tirada / cantidad
         resumen = f"{texto_resultado}\n\nTotal: {total_tirada}\nPromedio: {promedio:.2f}"
         console.print(Panel(resumen, title="Resultado Final", expand=False))
+        
+        # Actualización de las variables globales de estadísticas tras la tirada
         total_lanzamientos += 1
         total_dados += cantidad
         suma_historica += total_tirada
+        
+    # Por si las opciones del 1 al 3 ninguna es valida
     else:
         print("Opción no válida.")
-        
